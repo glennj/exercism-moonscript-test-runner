@@ -1,5 +1,7 @@
 #! /usr/bin/env moon
 
+-- Implements test-runner interface version 2
+
 require 'moonscript'
 lfs = require 'lfs'
 json = (require 'dkjson').use_lpeg!
@@ -88,6 +90,13 @@ run_tests = (slug, dir) ->
   for test in *data.failures
     results[test.element.name] = {
       status: 'fail',
+      name: test.element.name,
+      message: test.trace.message,
+    }
+
+  for test in *data.errors
+    results[test.element.name] = {
+      status: 'error',
       name: test.element.name,
       message: test.trace.message,
     }
