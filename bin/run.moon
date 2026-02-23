@@ -166,7 +166,7 @@ write_results = (slug, test_results, names, bodies, dir) ->
     for name in *names
       test = test_results[name]
       assert test, "no test result for #{name}"
-      status = 'fail' if test.status == 'fail'
+      status = 'fail' if test.status != 'pass'
       test.test_code = bodies[name]
       table.insert results.tests, test
     results.status = status
