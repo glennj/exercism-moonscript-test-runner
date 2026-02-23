@@ -68,10 +68,23 @@ run_tests = (slug, dir) ->
   data = json.decode json_output
 
   if not data
+    output = json_output
+
+    if output\match "^Failed to encode test results to json"
+      -- This is a syntax error: moon can't compile it.
+      -- Busted cannot output JSON results.
+      -- Grab the output from vanilla busted.
+      fh = io.popen 'busted', 'r'
+      output = fh\read 'a'
+      fh\close!
+      -- trim off some non-determinant output
+      output = output\gsub " : [%d.]+ seconds", ""
+
     return {
       status: 'error',
-      message: json_output
+      message: output
     }
+
 
   if exit_status != 0 and #data.successes == 0 and #data.failures == 0 and #data.errors > 0
     return {

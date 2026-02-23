@@ -1,1 +1,1 @@
-{"tests":[],"version":2,"message":"Failed to encode test results to json: type 'function' is not supported by JSON.\n","status":"error"}
+{"message":"*\n0 successes / 0 failures / 1 error / 0 pending\n\nError -> /opt/homebrew/share/lua/5.4/moonscript/base.lua @ 3\nsuite ./example_syntax_error_spec.moon\n/opt/homebrew/share/lua/5.4/moonscript/base.lua:81: ./example_syntax_error.moon: Failed to parse:\n [1] >>    leap_year =\n","tests":[],"status":"error","version":2}
