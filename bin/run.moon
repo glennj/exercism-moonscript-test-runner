@@ -79,6 +79,7 @@ run_tests = (slug, dir) ->
       fh\close!
       -- trim off some non-determinant output
       output = output\gsub " : [%d.]+ seconds", ""
+      output = output\gsub "(%s)/[%w./-]-/(base.lua)", "%1%2"
 
     return {
       status: 'error',
