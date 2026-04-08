@@ -35,11 +35,14 @@ RUN curl -R -O -L https://luarocks.org/releases/luarocks-${LUAROCKS_VER}.tar.gz 
 RUN luarocks install busted
 RUN luarocks install alt-getopt
 RUN luarocks install moonscript
+RUN luarocks install date
+RUN luarocks install lua-tz
+RUN luarocks install luatz
 
 FROM ubuntu:24.04
 
 RUN apt-get update && \
-    apt-get install -y jq && \
+    apt-get install -y jq tzdata && \
     rm -rf /var/lib/apt/lists/* && \
     apt-get purge --auto-remove && \
     apt-get clean

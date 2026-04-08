@@ -2,6 +2,14 @@
 
 The Docker image to automatically run tests on [MoonScript](https://github.com/exercism/moonscript) solutions submitted to [Exercism].
 
+## Added LuaRocks
+
+For student solutions, these additional luarocks have been added to the test-runner image:
+
+* [lua-tz](https://luarocks.org/modules/anaef/lua-tz)
+* [date](https://luarocks.org/modules/tieske/date)
+* [luatz](https://luarocks.org/modules/daurnimator/luatz)
+
 ## Run the test runner
 
 To run the tests of a single solution, do the following:
