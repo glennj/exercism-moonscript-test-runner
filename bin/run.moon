@@ -8,7 +8,7 @@ json = (require 'dkjson').use_lpeg!
 getopt = require 'alt_getopt'
 local verbose
 
-import p from require 'moon'
+-- import p from require 'moon'
 
 
 -- -----------------------------------------------------------
@@ -47,12 +47,12 @@ validate = (args) ->
 -- -----------------------------------------------------------
 run_tests = (slug, dir) ->
   ok, err = lfs.chdir dir
-  assert ok, err
+  assert ok, "run_tests: cannot change to directory #{dir}: #{err}"
 
   -- unskip tests
   cmd = "perl -i.bak -pe 's{^\\s*\\Kpending\\b}{it}' *_spec.moon"
   ok, result_type, status = os.execute cmd
-  assert ok
+  assert ok, "run_tests: failed to unskip tests with command #{cmd}: #{result_type} #{status}"
 
   -- launch `busted`
   fh = io.popen 'busted -o json', 'r'
@@ -114,14 +114,15 @@ run_tests = (slug, dir) ->
       name: test.element.name,
       message: test.trace.message,
     }
-
+  
+  -- p results
   results
 
 
 -- -----------------------------------------------------------
 get_test_bodies = (slug, dir) ->
   ok, err = lfs.chdir dir
-  assert ok, err
+  assert ok, "get_test_bodies: cannot change to directory #{dir}: #{err}"
 
   order = {}
   bodies = {}
@@ -139,6 +140,9 @@ get_test_bodies = (slug, dir) ->
   in_test = false
 
   for line in fh\lines!
+    -- do not look for any tests after this line, they won't run in test environment
+    break if line\match '-- The next tests are optional.'
+
     if line\match '^%s+describe '
       if test_name
         bodies[test_name] = table.concat test_body, '\n'
@@ -160,13 +164,14 @@ get_test_bodies = (slug, dir) ->
 
   fh\close!
   bodies[test_name] = table.concat test_body, '\n'
+  -- p {:order, :bodies}
   order, bodies
 
 
 -- -----------------------------------------------------------
 write_results = (slug, test_results, names, bodies, dir) ->
   ok, err = lfs.chdir dir
-  assert ok, "#{err}: #{dir}"
+  assert ok, "write_results: cannot change to directory #{dir}: #{err}"
   
   results = version: 2, status: nil, tests: {}
 
@@ -179,7 +184,11 @@ write_results = (slug, test_results, names, bodies, dir) ->
     status = 'pass'
     for name in *names
       test = test_results[name]
-      assert test, "no test result for #{name}"
+      if not test
+        status = 'error'
+        results.message = "missing test result for #{name}"
+        break
+
       status = 'fail' if test.status != 'pass'
       test.test_code = bodies[name]
       table.insert results.tests, test
