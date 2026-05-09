@@ -1,4 +1,4 @@
-FROM ubuntu:24.04 AS builder
+FROM ubuntu:24.04@sha256:c4a8d5503dfb2a3eb8ab5f807da5bc69a85730fb49b5cfca2330194ebcc41c7b AS builder
 
 ENV LUA_VER="5.4.8"
 ENV LUA_CHECKSUM="4f18ddae154e793e46eeab727c59ef1c0c0c2b744e7b94219710d76f530629ae"
@@ -39,7 +39,7 @@ RUN luarocks install date
 RUN luarocks install lua-tz
 RUN luarocks install luatz
 
-FROM ubuntu:24.04
+FROM ubuntu:24.04@sha256:c4a8d5503dfb2a3eb8ab5f807da5bc69a85730fb49b5cfca2330194ebcc41c7b
 
 RUN apt-get update && \
     apt-get install -y jq tzdata && \
